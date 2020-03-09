@@ -1,0 +1,98 @@
+{% extends 'nav.html' %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header bg-primary">
+        <a href='#proportion' class="card-link row" data-toggle="collapse" id='collapser'>
+            <h5 class="text-white col-sm-11"> Find Number and Proportion </h5>
+            <span class="fa fa-plus text-white col-sm-1 pl-5 " id='plus1'></span>
+        </a>
+    </div>
+    <div class="collapse hide" id="proportion">
+        <div class="card-body">
+            <form>
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-9">
+                        <select name="proportion-data" id="proportion-data" class="form-control">
+                            <option value="" selected hidden disabled> Select OEM</option>
+                            {% for  car in cars %}
+                            <option value="{{car.oem}}"> {{ car.oem }}</option>
+                            {% endfor %}
+                        </select>
+                        <span id='error-prop' style='color: #E83B1C; display:none;'> Please Select The OEM From Dropdown</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-primary form-control" id='proportion'>Search</button>
+                    </div>
+                </div>
+                </br>
+                <div id='data-proportion'>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+    var collapse1 =1;
+    $('#proportion').click(function(){
+        var oem = document.getElementById('proportion-data').value;
+        if(!oem){
+            $('#error-prop').css({"display":"block"});
+        }
+        else{
+            
+            $('#error-prop').css({"display":"none"});
+            $.ajax({
+                type: 'POST',
+                url:'/get-proportion/',
+                dataType: 'json',
+                data: {
+                    oem : oem,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(data){
+                    var table = '<table class="table table-striped"> <thead><tr> <th> Head Unit Types</th><th> Proportion</th></tr></thead><tbody>'
+                    var dataProportion = document.getElementById('data-proportion')
+                    context =  'The number of head unit types for OEM: '+oem+' is = '+data.length+ ". The OEM "+oem+" proportion with head unit types are following:"
+                    console.log(table)
+                    Object.keys(data).forEach(function(key, index){
+                        if(key != 'length'){
+                            table += '<tr> <td>'+key+'</td><td>'+data[key]+"</td></tr>"
+                        }
+                        
+                    })
+                    table += "</tbody> <table>"
+                    dataProportion.innerHTML = context+"</br> </br> "+table
+                }
+            });
+           
+        }
+        
+    });
+    
+    $('#collapser').click(function(){
+        if(collapse1 == 1){
+            $("#plus1").removeClass("fa fa-plus");
+            $("#plus1").addClass("fa fa-minus");
+            collapse1 = 0
+        }
+        else{
+             $("#plus1").removeClass("fa fa-minus");
+            $("#plus1").addClass("fa fa-plus");
+            collapse1 = 1
+        }
+    });
+
+  });
+
+
+</script>
+
+{% endblock %}
