@@ -11,7 +11,7 @@ class Car(models.Model):
     head_unit_type = models.CharField(max_length=75)
     standerd = models.CharField(max_length=2)
     stand_alone = models.CharField(max_length=2)
-    pack = models.CharField(max_length=2)
+    pack = models.CharField(max_length=75)
     input_central_controller = models.CharField(max_length=2)
     input_touch_screen = models.CharField(max_length=2)
     input_handwriting_recog = models.CharField(max_length=2)

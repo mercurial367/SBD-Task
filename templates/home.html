@@ -4,26 +4,26 @@
 
 <div class="card">
     <div class="card-header bg-primary">
-        <a href='#proportion' class="card-link row" data-toggle="collapse" id='collapser'>
+        <a href='#proportion-area' class="card-link row" data-toggle="collapse" id='collapser'>
             <h5 class="text-white col-sm-11"> Find Number and Proportion </h5>
             <span class="fa fa-plus text-white col-sm-1 pl-5 " id='plus1'></span>
         </a>
     </div>
-    <div class="collapse hide" id="proportion">
+    <div class="collapse hide" id="proportion-area">
         <div class="card-body">
             <form>
             {% csrf_token %}
                 <div class="row">
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 pb-2">
                         <select name="proportion-data" id="proportion-data" class="form-control">
                             <option value="" selected hidden disabled> Select OEM</option>
                             {% for  car in cars %}
                             <option value="{{car.oem}}"> {{ car.oem }}</option>
                             {% endfor %}
                         </select>
-                        <span id='error-prop' style='color: #E83B1C; display:none;'> Please Select The OEM From Dropdown</span>
+                        <span id='error-prop' style='color: #E83B1C; display:none;'> Please Select an OEM From Dropdown</span>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 pb-2">
                         <button type="button" class="btn btn-primary form-control" id='proportion'>Search</button>
                     </div>
                 </div>
@@ -37,10 +37,68 @@
     </div>
 </div>
 
+</br>
+</br>
+
+<div class="card">
+    <div class="card-header bg-primary">
+        <a href='#model-avilability-area' class="card-link row" data-toggle="collapse" id='collapser2'>
+            <h5 class="text-white col-sm-11"> Check Model Avilability by Smartphone Integration </h5>
+            <span class="fa fa-plus text-white col-sm-1 pl-5 " id='plus2'></span>
+        </a>
+    </div>
+    <div class="collapse hide" id="model-avilability-area">
+        <div class="card-body">
+            <form>
+            {% csrf_token %}
+
+                <div class="row">
+                
+                    <div class="col-sm-4 pb-2">
+                        <lable> Proxy : </lable></br>
+                        <select name="proxy" id="proxy" class="form-control">
+                            <option value="" selected hidden disabled> Want proxy in your car</option>
+                            <option value="Y" > Yes </option>
+                            <option value="" > No </option>  
+                        </select>
+                    </div>
+                    <div class="col-sm-4 pb-2">
+                        <lable> Car Play : </lable></br>
+                        <select name="car-play" id="car-play" class="form-control">
+                            <option value="" selected hidden disabled> Want Car play in your car</option>
+                            <option value="Y" > Yes </option>
+                            <option value="" > No </option>  
+                        </select>
+                    </div>
+                    <div class="col-sm-4 pb-2">
+                        <lable> Android Auto : </lable></br>
+                         <select name="android-auto" id="android-auto" class="form-control">
+                            <option value="" selected hidden disabled> Want Android auto play in your car</option>
+                            <option value="Y" > Yes </option>
+                            <option value="" > No </option>  
+                        </select>
+                    </div>
+                    <span id='error-model' class="col-sm-12" style='color: #E83B1C; display:none;'> It seems like you haven't selected "YES" for any of the above. Please select any of it as "YES" to proceed.</span>
+                    <div class="col-sm-4 pb-2"></div>
+                    <div class="col-sm-4 pb-2">
+                        <button type="button" class="btn btn-primary form-control" id='model-avilability'>Search</button>
+                    </div>
+                    <div class="col-sm-4 pb-2"></div>
+                    </div>
+                    </br>
+                    <div id="model-avilability-processed"> </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
 
 $(document).ready(function(){
     var collapse1 =1;
+    var collapse2 =1;
     $('#proportion').click(function(){
         var oem = document.getElementById('proportion-data').value;
         if(!oem){
@@ -60,7 +118,7 @@ $(document).ready(function(){
                 success: function(data){
                     var table = '<table class="table table-striped"> <thead><tr> <th> Head Unit Types</th><th> Proportion</th></tr></thead><tbody>'
                     var dataProportion = document.getElementById('data-proportion')
-                    context =  'The number of head unit types for OEM: '+oem+' is = '+data.length+ ". The OEM "+oem+" proportion with head unit types are following:"
+                    context =  'The number of head unit types for OEM: '+oem+' is = '+data.length+ ".</br> The OEM "+oem+" proportion with head unit types are following:"
                     console.log(table)
                     Object.keys(data).forEach(function(key, index){
                         if(key != 'length'){
@@ -88,6 +146,69 @@ $(document).ready(function(){
             $("#plus1").addClass("fa fa-plus");
             collapse1 = 1
         }
+    });
+
+       $('#collapser2').click(function(){
+        if(collapse2 == 1){
+            $("#plus2").removeClass("fa fa-plus");
+            $("#plus2").addClass("fa fa-minus");
+            collapse2 = 0
+        }
+        else{
+             $("#plus2").removeClass("fa fa-minus");
+            $("#plus2").addClass("fa fa-plus");
+            collapse2 = 1
+        }
+    });
+
+    $('#model-avilability').click(function(){
+        var proxy = document.getElementById('proxy').value
+        var carplay = document.getElementById('car-play').value
+        var androidauto = document.getElementById('android-auto').value
+
+        if(proxy == 'Y' || carplay == 'Y' || androidauto == 'Y'){
+            $('#error-model').css({"display":"none"});
+
+            $.ajax({
+                type: 'POST',
+                url:'/get-models/',
+                dataType: 'json',
+                data: {
+                    proxy : proxy,
+                    carplay : carplay,
+                    androidauto : androidauto,
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(data){
+                    var model_avilability = document.getElementById('model-avilability-processed')
+                    var table_model = '<table class="table table-striped"> <thead><tr> <th> OEM</th><th> Model</th><th> Standerd/ Stand Alone/ Pack</th></tr></thead><tbody>'
+                    if(data.car_model.length){
+                        data.car_model.forEach(function(items, index){
+                            table_model += '<tr> <td>'+items.oem+'</td><td>'+items.model+"</td><td>"
+                            if(items.standerd){
+                                table_model += "Standerd </td> </tr>"
+                            }else if(items.stand_alone){
+                                table_model += "Stand Alone </td> </tr>"
+                            }else if(items.pack){
+                                table_model += "Pack : "+items.pack+"</td> </tr>"
+                            }
+                        })
+
+                        table_model += "</tbody> <table>"
+
+                        model_avilability.innerHTML ="<span> We got following models for your selection : </span> </br></br>"+table_model 
+
+                    }else{
+                        model_avilability.innerHTML = '<span class="bg-danger text-white">Data are not avilable for your selection try with different combination.</span>'
+                    }
+
+                }
+            });
+
+        }else{
+            $('#error-model').css({"display":"block"});
+        }
+
     });
 
   });

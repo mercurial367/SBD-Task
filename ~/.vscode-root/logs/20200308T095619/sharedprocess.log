@@ -32,3 +32,9 @@
 [2020-03-09 09:50:36.796] [sharedprocess] [info] Renamed to /root/.vscode/extensions/hookyqr.beautify-1.5.0
 [2020-03-09 09:50:36.797] [sharedprocess] [info] Installation completed. hookyqr.beautify
 [2020-03-09 09:50:36.868] [sharedprocess] [info] Extensions installed successfully: hookyqr.beautify
+[2020-03-09 17:24:33.466] [sharedprocess] [info] Installing extension: ms-azuretools.vscode-docker
+[2020-03-09 17:24:37.286] [sharedprocess] [info] Downloaded extension: ms-azuretools.vscode-docker /tmp/d84b3f95-36e6-41b5-a989-f48310dcaaea
+[2020-03-09 17:24:38.047] [sharedprocess] [info] Extracted extension to /root/.vscode/extensions/.ms-azuretools.vscode-docker-1.0.0: ms-azuretools.vscode-docker
+[2020-03-09 17:24:38.047] [sharedprocess] [info] Renamed to /root/.vscode/extensions/ms-azuretools.vscode-docker-1.0.0
+[2020-03-09 17:24:38.051] [sharedprocess] [info] Installation completed. ms-azuretools.vscode-docker
+[2020-03-09 17:24:38.771] [sharedprocess] [info] Extensions installed successfully: ms-azuretools.vscode-docker

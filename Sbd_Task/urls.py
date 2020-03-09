@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('get-proportion/', views.number_and_proportion, name='get-proportion'),
-
+    path('get-models/', views.get_models, name='get-models'),
+    path('readme/', views.readme, name='readme'),
 ]
